@@ -1,0 +1,6 @@
+[core]
+    remote = remote_storage
+[cache]
+    type = symlink
+['remote "remote_storage"']
+    url = ../../remote_storage/spacetitanic
