@@ -1,21 +1,34 @@
 # Space Titanic
 
+Practicing DVC and using XGBoost with the [Spaceship Titanic](https://www.kaggle.com/competitions/spaceship-titanic/overview) Kaggle competition.
+
+## Objectives
+
 The aim of this repository is to:
 
 1. Have some fun!
 2. Practice using DVC to version control data.
-3. Practice using DVC to create a pipeline and track metrics for each iteration of the pipeline.
+3. Practice using DVC to create a pipeline and track metrics for each version of the model.
 4. Gain a deeper intuition and practical understanding of XGboost algorithms.
 
-# Steps
+## Installation
 
-The sequential steps taken to address the above.
+```bash
+conda create
+```
 
-1. Setup repo with git and DVC.
-2. Explore the features of the raw data.
-3. Create a random forest MVP.
-4. Feature engineering.
-5. Feature selection.
-6. Hyper parameter tuning for the random forest.
-7. Create an XGboost MVP.
-8. Hyper parameter tune for the XGboost.
+## Approach
+
+The following steps were taken sequentially to develop the pipeline within this repository:
+
+| N. | Description |
+| --- | --- |
+| 01 | Setup repo using git and [DVC](https://realpython.com/python-data-version-control/) |
+| 02 | [Feature exploration](notebooks/feature_exploration.ipynb) |
+| 03 | Create a minimal preprocessing pipeline |
+| 04 | Create a MVP model (random forest), decide on the evaluation metrics |
+| 05 | Feature engineering |
+| 06 | Feature selection |
+| 07 | Hyper parameter tune the random forest |
+| 08 | Implement XGboost algorithm |
+| 09 | Hyper parameter tune the XGboost algorithm |
