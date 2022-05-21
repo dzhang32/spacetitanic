@@ -6,7 +6,7 @@ from sklearn import preprocessing
 from sklearn.impute import KNNImputer
 
 
-def main(repo_path: Path, non_feat_cols: List[str]) -> None:
+def main(repo_path: Path, non_feat_cols: List[str], y_col: str) -> None:
     """Perform feature engineering.
 
     Converts the categorical features into encoded integers. Imputes the missing values
@@ -18,6 +18,8 @@ def main(repo_path: Path, non_feat_cols: List[str]) -> None:
         the path to the root of the project (that contains the data/ folder).
     non_feat_cols : List[str]
         the column names of the variables that are NOT features.
+    y_col : str
+        the column names of the variable to be predicted.
     """
     print("Engineering Features\n--------------------------------")
 
@@ -25,7 +27,7 @@ def main(repo_path: Path, non_feat_cols: List[str]) -> None:
     train_test = pd.read_csv(repo_path / "data/processed/train_test_preprocessed.csv")
 
     print("Encoding categorical features...")
-    train_test = encode_cat_vars(train_test, non_feat_cols)
+    train_test = encode_cat_vars(train_test, non_feat_cols, y_col)
 
     print("Imputing missing values...")
     train_test = impute_missing(train_test, non_feat_cols)
@@ -46,7 +48,9 @@ def main(repo_path: Path, non_feat_cols: List[str]) -> None:
     print("done!")
 
 
-def encode_cat_vars(df: pd.DataFrame, non_feat_cols: List[str]) -> pd.DataFrame:
+def encode_cat_vars(
+    df: pd.DataFrame, non_feat_cols: List[str], y_col: str
+) -> pd.DataFrame:
     """Encode categorical features as integers.
 
     Parameters
@@ -55,6 +59,8 @@ def encode_cat_vars(df: pd.DataFrame, non_feat_cols: List[str]) -> pd.DataFrame:
         contains the train/test data.
     non_feat_cols : List[str]
         the column names of the variables that are NOT features.
+    y_col : str
+        the column names of the variable to be predicted.
 
     Returns
     -------
@@ -66,7 +72,7 @@ def encode_cat_vars(df: pd.DataFrame, non_feat_cols: List[str]) -> pd.DataFrame:
     le = preprocessing.LabelEncoder()
     feat_cols = [c for c in df.columns if c not in non_feat_cols]
 
-    for feat in feat_cols:
+    for feat in feat_cols + [y_col]:
         # if column is string or bool
         if df[feat].dtype == object:
             le = le.fit(df[feat])
@@ -154,4 +160,4 @@ def split_train_test(train_test: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFra
 
 if __name__ == "__main__":
     repo_path = Path(__file__).parent.parent.parent.parent
-    main(repo_path, ["passengerid", "transported", "dataset"])
+    main(repo_path, ["passengerid", "transported", "dataset"], "transported")
