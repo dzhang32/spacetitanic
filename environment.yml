@@ -8,11 +8,14 @@ dependencies:
   - aiohttp-retry=2.4.6=pyhd8ed1ab_1
   - aiosignal=1.2.0=pyhd8ed1ab_0
   - appdirs=1.4.4=pyh9f0ad1d_0
+  - appnope=0.1.3=pyhd8ed1ab_0
+  - asttokens=2.0.5=pyhd8ed1ab_0
   - async-timeout=4.0.2=pyhd8ed1ab_0
   - asyncssh=2.10.1=pyhd8ed1ab_0
   - atk-1.0=2.36.0=he69c4ee_4
   - atpublic=3.0.1=pyhd8ed1ab_0
   - attrs=21.4.0=pyhd8ed1ab_0
+  - backcall=0.2.0=pyh9f0ad1d_0
   - backports=1.0=py_2
   - backports.functools_lru_cache=1.6.4=pyhd8ed1ab_0
   - brotli=1.0.9=h5eb16cf_7
@@ -32,6 +35,7 @@ dependencies:
   - cryptography=36.0.0=py310hf6deb26_0
   - cycler=0.11.0=pyhd8ed1ab_0
   - dataclasses=0.8=pyhc8e2a94_3
+  - debugpy=1.6.0=py310h9d931ec_0
   - decorator=5.1.1=pyhd8ed1ab_0
   - dictdiffer=0.9.0=pyhd8ed1ab_0
   - diskcache=5.4.0=pyhd8ed1ab_0
@@ -41,6 +45,8 @@ dependencies:
   - dvc=2.10.2=py310h2ec42d9_0
   - dvc-render=0.0.5=pyhd8ed1ab_0
   - dvclive=0.7.3=pyhd8ed1ab_0
+  - entrypoints=0.4=pyhd8ed1ab_0
+  - executing=0.8.3=pyhd8ed1ab_0
   - expat=2.4.8=h96cf925_0
   - flatten-dict=0.4.2=pyhd8ed1ab_1
   - flufl.lock=7.0=pyhd8ed1ab_0
@@ -72,9 +78,14 @@ dependencies:
   - harfbuzz=4.2.1=h00bb2c2_0
   - icu=70.1=h96cf925_0
   - idna=3.3=pyhd8ed1ab_0
+  - ipykernel=6.13.0=py310ha188af9_0
+  - ipython=8.3.0=py310h2ec42d9_0
   - jbig=2.1=h0d85af4_2003
+  - jedi=0.18.1=py310h2ec42d9_1
   - joblib=1.0.1=pyhd3eb1b0_0
   - jpeg=9e=h5eb16cf_1
+  - jupyter_client=7.3.0=pyhd8ed1ab_0
+  - jupyter_core=4.9.2=py310h2ec42d9_0
   - kiwisolver=1.4.2=py310h6be76da_1
   - krb5=1.19.3=hb98e516_0
   - lcms2=2.12=h577c468_0
@@ -98,6 +109,7 @@ dependencies:
   - libopenblas=0.3.20=openmp_hb3cd9ec_0
   - libpng=1.6.37=h7cec526_2
   - librsvg=2.54.1=h3d48ba6_0
+  - libsodium=1.0.18=hbcb3906_1
   - libssh2=1.10.0=hd3787cc_2
   - libtiff=4.3.0=h17f2ce3_3
   - libtool=2.4.6=he49afe7_1008
@@ -110,10 +122,12 @@ dependencies:
   - lz4-c=1.9.3=he49afe7_1
   - mailchecker=4.1.16=pyhd8ed1ab_0
   - matplotlib-base=3.5.1=py310hfc59cd6_0
+  - matplotlib-inline=0.1.3=pyhd8ed1ab_0
   - multidict=6.0.2=py310h1961e1f_1
   - munkres=1.1.4=pyh9f0ad1d_0
   - nanotime=0.5.2=py_0
   - ncurses=6.3=h96cf925_1
+  - nest-asyncio=1.5.5=pyhd8ed1ab_0
   - networkx=2.8=pyhd8ed1ab_0
   - numpy=1.22.3=py310he1f95b8_2
   - openjpeg=2.4.0=h6e7aa92_1
@@ -121,17 +135,24 @@ dependencies:
   - packaging=21.3=pyhd8ed1ab_0
   - pandas=1.4.2=py310h514ec25_1
   - pango=1.50.7=hc4a7b6d_0
+  - parso=0.8.3=pyhd8ed1ab_0
   - pathlib2=2.3.7.post1=py310h2ec42d9_1
   - pathspec=0.9.0=pyhd8ed1ab_0
+  - patsy=0.5.2=pyhd8ed1ab_0
   - pcre=8.45=he49afe7_0
   - pcre2=10.37=ha16e1b2_0
+  - pexpect=4.8.0=pyh9f0ad1d_2
   - phonenumbers=8.12.47=pyhd8ed1ab_0
+  - pickleshare=0.7.5=py_1003
   - pillow=9.1.0=py310h382dc3b_2
   - pip=22.0.4=pyhd8ed1ab_0
   - pixman=0.40.0=hbcb3906_0
   - ply=3.11=py_1
+  - prompt-toolkit=3.0.29=pyha770c72_0
   - psutil=5.9.0=py310h1961e1f_1
   - pthread-stubs=0.4=hc929b4f_1001
+  - ptyprocess=0.7.0=pyhd3deb0d_0
+  - pure_eval=0.2.2=pyhd8ed1ab_0
   - pyasn1=0.4.8=py_0
   - pycparser=2.21=pyhd8ed1ab_0
   - pydot=1.4.2=py310h2ec42d9_1
@@ -150,6 +171,7 @@ dependencies:
   - python_abi=3.10=2_cp310
   - pytz=2022.1=pyhd8ed1ab_0
   - pyyaml=6.0=py310h1961e1f_4
+  - pyzmq=22.3.0=py310h138f930_2
   - readline=8.1=h05e3726_0
   - requests=2.27.1=pyhd8ed1ab_0
   - rich=12.3.0=pyhd8ed1ab_0
@@ -158,18 +180,24 @@ dependencies:
   - scikit-learn=1.0.2=py310h598de7d_0
   - scipy=1.8.0=py310h47774c9_1
   - scmrepo=0.0.19=pyhd8ed1ab_0
+  - seaborn=0.11.2=hd8ed1ab_0
+  - seaborn-base=0.11.2=pyhd8ed1ab_0
   - setuptools=62.1.0=py310h2ec42d9_0
   - shortuuid=1.0.8=py310h2ec42d9_0
   - shtab=1.5.4=pyhd8ed1ab_0
   - six=1.16.0=pyh6c4a22f_0
   - smmap=3.0.5=pyh44b312d_0
   - sqlite=3.38.3=hd9f0692_0
+  - stack_data=0.2.0=pyhd8ed1ab_0
+  - statsmodels=0.13.2=py310h81f86ea_0
   - tabulate=0.8.9=pyhd8ed1ab_0
   - text-unidecode=1.3=py_0
   - threadpoolctl=2.2.0=pyh0d69192_0
   - tk=8.6.12=h5dbffcc_0
   - toml=0.10.2=pyhd8ed1ab_0
+  - tornado=6.1=py310h1961e1f_3
   - tqdm=4.64.0=pyhd8ed1ab_0
+  - traitlets=5.1.1=pyhd8ed1ab_0
   - typing-extensions=4.2.0=hd8ed1ab_1
   - typing_extensions=4.2.0=pyha770c72_1
   - tzdata=2022a=h191b570_0
@@ -186,6 +214,7 @@ dependencies:
   - yaml=0.2.5=h0d85af4_2
   - yarl=1.7.2=py310h1961e1f_2
   - zc.lockfile=2.0=py_0
+  - zeromq=4.3.4=he49afe7_1
   - zlib=1.2.11=h6c3fc93_1014
   - zstd=1.5.2=h582d3a0_0
 prefix: /usr/local/Caskroom/miniconda/base/envs/spacetitanic
