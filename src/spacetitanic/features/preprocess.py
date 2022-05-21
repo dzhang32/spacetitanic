@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 
 
-def main(repo_path: Path):
+def main(repo_path: Path) -> None:
     """Load, merge and preprocess the train and test data.
 
     Parameters
