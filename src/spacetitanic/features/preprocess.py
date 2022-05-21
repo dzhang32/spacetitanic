@@ -18,11 +18,15 @@ def main(repo_path: Path):
     print("Preprocessing train/test data...")
     train_test = merge_train_test(train, test)
     train_test = tidy_colnames(train_test)
+    train_test = drop_cols(train_test)
     train_test = tidy_passengerid(train_test)
     train_test = tidy_cabin(train_test)
 
     print("Saving preprocessed train/test data...")
-    train_test.to_csv(repo_path / "data/processed/train_test_preprocessed.csv")
+    train_test.to_csv(
+        repo_path / "data/processed/train_test_preprocessed.csv",
+        index=False,
+    )
 
     print("done!")
 
@@ -48,6 +52,23 @@ def merge_train_test(train: pd.DataFrame, test: pd.DataFrame) -> pd.DataFrame:
     train_test.reset_index(drop=True, inplace=True)
 
     return train_test
+
+
+def drop_cols(df: pd.DataFrame) -> pd.DataFrame:
+    """Drop the unnecessary columns (name).
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        contains the train and test data.
+
+    Returns
+    -------
+    pd.DataFrame
+        contains the train and test data with unnecessary columns removed.
+    """
+    df = df.drop(columns="name", inplace=False)
+    return df
 
 
 def tidy_colnames(df: pd.DataFrame) -> pd.DataFrame:
