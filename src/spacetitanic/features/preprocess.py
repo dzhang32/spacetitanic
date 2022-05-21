@@ -16,6 +16,7 @@ def tidy_cabin(df: pd.DataFrame) -> pd.DataFrame:
         dropped.
     """
     df[["deck", "cabin_num", "side"]] = df["Cabin"].str.split("/", 2, expand=True)
+    df["cabin_num"] = df["cabin_num"].astype("Int32")
     df = df.drop(columns="Cabin")
 
     return df
