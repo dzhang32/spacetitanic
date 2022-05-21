@@ -11,6 +11,7 @@ def main(repo_path: Path) -> None:
     repo_path : Path
         the path to the root of the project (that contains the data/ folder).
     """
+    print("Preprocessing train/test data\n--------------------------------")
     print("Loading train/test data...")
     train = pd.read_csv(repo_path / "data/raw/train.csv")
     test = pd.read_csv(repo_path / "data/raw/test.csv")
