@@ -25,10 +25,9 @@ The following steps were taken sequentially to develop the pipeline within this 
 | --- | --- |
 | 01 | Setup repo using git and [DVC](https://realpython.com/python-data-version-control/) |
 | 02 | [Feature exploration](notebooks/feature_exploration.ipynb) |
-| 03 | Create a minimal preprocessing pipeline |
+| 03 | Create a minimal preprocessing and feature engineering pipeline |
 | 04 | Create a MVP model (random forest), decide on the evaluation metrics |
-| 05 | Feature engineering |
-| 06 | Feature selection |
-| 07 | Hyper parameter tune the random forest |
-| 08 | Implement XGboost algorithm |
-| 09 | Hyper parameter tune the XGboost algorithm |
+| 05 | Hyper parameter tune the random forest |
+| 06 | Implement XGboost algorithm |
+| 07 | Feature selection |
+| 08 | Hyper parameter tune the XGboost algorithm |
