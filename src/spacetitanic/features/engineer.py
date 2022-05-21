@@ -155,6 +155,8 @@ def split_train_test(train_test: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFra
         data.reset_index(drop=True, inplace=True)
         data.drop(columns="dataset", inplace=True)
 
+    test.drop(columns="transported", inplace=True)
+
     return train, test
 
 
