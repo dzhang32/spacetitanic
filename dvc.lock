@@ -1,0 +1,70 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python3 src/spacetitanic/features/preprocess.py
+    deps:
+    - path: data/raw
+      md5: c22b52fb28cb1cfe08b7d9d41404d3ff.dir
+      size: 1243958
+      nfiles: 4
+    - path: src/spacetitanic/features/preprocess.py
+      md5: f0b680b384d194d6ee6592b7c7bfcdac
+      size: 3406
+    outs:
+    - path: data/processed/train_test_preprocessed.csv
+      md5: f71e65a05755ec4d2cb037e4bd69b98e
+      size: 1107023
+  engineer:
+    cmd: python3 src/spacetitanic/features/engineer.py
+    deps:
+    - path: data/processed/train_test_preprocessed.csv
+      md5: f71e65a05755ec4d2cb037e4bd69b98e
+      size: 1107023
+    - path: src/spacetitanic/features/engineer.py
+      md5: c13c69a6095e4d5f1566d8ca963b9c47
+      size: 4688
+    outs:
+    - path: data/processed/test_engineered.csv
+      md5: 5955eb20949b4773efd9100a9bcb82a6
+      size: 299378
+    - path: data/processed/train_engineered.csv
+      md5: 3b0090321577ede2fed02bdca998d270
+      size: 625815
+  train:
+    cmd: python3 src/spacetitanic/models/train.py
+    deps:
+    - path: data/processed/train_engineered.csv
+      md5: 3b0090321577ede2fed02bdca998d270
+      size: 625815
+    - path: src/spacetitanic/models/train.py
+      md5: 1e5bf7348c455617315aaf769992f156
+      size: 2731
+    outs:
+    - path: data/processed/val_engineered.csv
+      md5: c99a40c49901023eb87d20476a42d9a3
+      size: 139325
+    - path: model/model.joblib
+      md5: df089716f6be3cc682303ef890be7422
+      size: 16740162
+  evaluate:
+    cmd: python3 src/spacetitanic/models/evaluate.py
+    deps:
+    - path: data/processed/test_engineered.csv
+      md5: 5955eb20949b4773efd9100a9bcb82a6
+      size: 299378
+    - path: data/processed/val_engineered.csv
+      md5: c99a40c49901023eb87d20476a42d9a3
+      size: 139325
+    - path: model/model.joblib
+      md5: df089716f6be3cc682303ef890be7422
+      size: 16740162
+    - path: src/spacetitanic/models/evaluate.py
+      md5: d5a79944fb8e503188f868d2b46ce1c9
+      size: 3147
+    outs:
+    - path: data/output/submission.csv
+      md5: 50f45c1816aaa078bca1e732a04becbe
+      size: 57897
+    - path: metrics/metrics.json
+      md5: 756806e9edddf42f85730c6647f30dc8
+      size: 127
