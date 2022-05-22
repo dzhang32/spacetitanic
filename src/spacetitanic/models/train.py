@@ -1,10 +1,11 @@
 from pathlib import Path
 from typing import Callable, List, Tuple
 
+import numpy as np
 import pandas as pd
 from joblib import dump
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import RandomizedSearchCV, train_test_split
 
 
 def main(repo_path: Path, non_feat_cols: List[str], y_col: str) -> None:
@@ -84,10 +85,39 @@ def train_model(X_train: pd.DataFrame, y_train: pd.Series) -> Callable:
     Callable
         a model trained on the training dataset.
     """
-    clf = RandomForestClassifier(n_estimators=100)
-    clf.fit(X_train, y_train)
+    clf = RandomForestClassifier()
 
-    return clf
+    # create grid of hyperparameters for random search
+    n_estimators = [int(x) for x in np.linspace(start=100, stop=600, num=6)]
+    max_features = ["auto", "sqrt", 0.2, 0.3]
+    criterion = ["gini", "entropy"]
+    max_depth = [int(x) for x in np.linspace(10, 110, num=11)]
+    max_depth.append(None)
+    min_samples_split = [2, 5, 10]
+    min_samples_leaf = [1, 2, 4]
+
+    random_grid = {
+        "n_estimators": n_estimators,
+        "max_features": max_features,
+        "criterion": criterion,
+        "max_depth": max_depth,
+        "min_samples_split": min_samples_split,
+        "min_samples_leaf": min_samples_leaf,
+    }
+
+    clf_random = RandomizedSearchCV(
+        estimator=clf,
+        param_distributions=random_grid,
+        n_iter=200,
+        cv=5,
+        verbose=2,
+        random_state=32,
+        n_jobs=5,
+    )
+
+    clf_random.fit(X_train, y_train)
+
+    return clf_random
 
 
 if __name__ == "__main__":
