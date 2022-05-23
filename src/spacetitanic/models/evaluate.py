@@ -98,4 +98,4 @@ def get_submission_df(test: pd.DataFrame, y_test_pred: np.ndarray) -> pd.DataFra
 
 if __name__ == "__main__":
     repo_path = Path(__file__).parent.parent.parent.parent
-    main(repo_path, ["passengerid", "transported", "dataset"], "transported")
+    main(repo_path, ["passengerid", "transported"], "transported")
