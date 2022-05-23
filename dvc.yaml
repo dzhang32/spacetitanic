@@ -21,13 +21,15 @@ stages:
     - src/spacetitanic/models/train.py
     outs:
     - data/processed/val_engineered.csv
-    - model/model.joblib
+    - model/model_test.joblib
+    - model/model_val.joblib
   evaluate:
     cmd: python3 src/spacetitanic/models/evaluate.py
     deps:
     - data/processed/test_engineered.csv
     - data/processed/val_engineered.csv
-    - model/model.joblib
+    - model/model_test.joblib
+    - model/model_val.joblib
     - src/spacetitanic/models/evaluate.py
     outs:
     - data/output/submission.csv
