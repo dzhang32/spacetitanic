@@ -37,7 +37,7 @@ stages:
       md5: 3b0090321577ede2fed02bdca998d270
       size: 625815
     - path: src/spacetitanic/models/train.py
-      md5: a6373b6a30be7cc1b11b12cf12e8b869
+      md5: f55cf5c6c18a5c9528fee6b17b54f718
       size: 2775
     outs:
     - path: data/processed/val_engineered.csv
