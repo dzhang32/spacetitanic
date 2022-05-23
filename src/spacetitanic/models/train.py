@@ -1,3 +1,4 @@
+from calendar import c
 from pathlib import Path
 from typing import Callable, List, Tuple
 
@@ -5,7 +6,7 @@ import numpy as np
 import pandas as pd
 from joblib import dump
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import RandomizedSearchCV, train_test_split
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV, train_test_split
 
 
 def main(repo_path: Path, non_feat_cols: List[str], y_col: str) -> None:
@@ -87,6 +88,28 @@ def train_model(X_train: pd.DataFrame, y_train: pd.Series) -> Callable:
     """
     clf = RandomForestClassifier()
 
+    clf_random = tune_random(clf)
+    clf_random.fit(X_train, y_train)
+
+    clf_tuned = tune_grid(clf, clf_random)
+    clf_tuned.fit(X_train, y_train)
+
+    return clf_tuned
+
+
+def tune_random(clf: Callable) -> Callable:
+    """Tune a random forest classifier using a random grid search.
+
+    Parameters
+    ----------
+    clf : Callable
+        a random forest classifier object.
+
+    Returns
+    -------
+    Callable
+        a random forest classifier hyperparametered tuned using a random grid.
+    """
     # create grid of hyperparameters for random search
     n_estimators = [int(x) for x in np.linspace(start=100, stop=600, num=6)]
     max_features = ["auto", "sqrt", 0.2, 0.3]
@@ -105,19 +128,80 @@ def train_model(X_train: pd.DataFrame, y_train: pd.Series) -> Callable:
         "min_samples_leaf": min_samples_leaf,
     }
 
+    print(f"Performing a random search with the params:\n{random_grid}")
+
     clf_random = RandomizedSearchCV(
         estimator=clf,
         param_distributions=random_grid,
         n_iter=200,
         cv=5,
-        verbose=2,
         random_state=32,
+        verbose=2,
         n_jobs=5,
     )
 
-    clf_random.fit(X_train, y_train)
-
     return clf_random
+
+
+def tune_grid(clf: Callable, clf_random: Callable) -> Callable:
+    """Tune a random forest classifier using an exhaustive grid search.
+
+    Parameters
+    ----------
+    clf : Callable
+        a random forest classifier object.
+
+    Returns
+    -------
+    Callable
+        a random forest classifier hyperparametered tuned using a exhaustive grid
+        search.
+    """
+    # seed from the best parameters from the random search
+    param_grid = clf_random.best_params_
+
+    # the scale of each param differs, so we choose a diff value that reflects this
+    search_diff = {
+        "n_estimators": 100,
+        "max_features": 0.1,
+        "max_depth": 5,
+        "min_samples_split": 2,
+        "min_samples_leaf": 1,
+    }
+
+    # build a grid around each param to perform an exhaustive search
+    for param, best_rand in param_grid.items():
+
+        # check if param is one we want to search around (e.g. criterion is not)
+        # if not, we wrap these scalars in a list for GridSearchCV
+        if param not in search_diff:
+            param_grid[param] = [best_rand]
+
+        # max_depth might be None and max features might be a string
+        # in which case, we wrap these scalars in a list for GridSearchCV
+        elif best_rand is None or isinstance(best_rand, str):
+            param_grid[param] = [best_rand]
+
+        else:
+            diff = search_diff[param]
+            search_space = np.arange(best_rand - 2 * diff, best_rand + 2 * diff, diff)
+
+            # remove negative and 0 values from the search space
+            search_space = search_space[search_space > 0]
+
+            param_grid[param] = search_space
+
+    print(f"Performing a exhaustive grid search with the params:\n{param_grid}")
+
+    clf_grid = GridSearchCV(
+        estimator=clf,
+        param_grid=param_grid,
+        cv=5,
+        verbose=2,
+        n_jobs=5,
+    )
+
+    return clf_grid
 
 
 if __name__ == "__main__":
