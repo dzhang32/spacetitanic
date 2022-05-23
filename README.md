@@ -28,4 +28,7 @@ The following steps were taken sequentially to develop the pipeline within this 
 | 04 | Implement a [baseline random forest (rf) classifier](https://github.com/dzhang32/spacetitanic/releases/tag/rf-mvp) |
 | 05 | Tune the rf using a [random grid](https://github.com/dzhang32/spacetitanic/releases/tag/rf-random_grid) |
 | 06 | Implement a baseline XGboost classifier |
-| 07 | Hyper parameter tune the XGboost algorithm |
+| 07 | Use entire train dataset (rather than train minus valisation) for training* |
+| 08 | One-hot encode the categorical features |
+| 09 | Feature selection |
+| 10 | Hyper parameter tune the XGboost classifier |
