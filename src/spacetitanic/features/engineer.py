@@ -3,7 +3,7 @@ from typing import Callable, List, Tuple
 
 import pandas as pd
 from sklearn import preprocessing
-from sklearn.impute import KNNImputer
+from sklearn.impute import KNNImputer, SimpleImputer
 
 
 def main(repo_path: Path, non_feat_cols: List[str], y_col: str) -> None:
@@ -30,7 +30,7 @@ def main(repo_path: Path, non_feat_cols: List[str], y_col: str) -> None:
     train_test = encode_cat_vars(train_test, non_feat_cols, y_col)
 
     print("Imputing missing values...")
-    train_test = impute_missing(train_test, non_feat_cols)
+    train_test = impute_missing(train_test, non_feat_cols, imputer="knn")
 
     print("Split train/test data back into separate dfs...")
     train, test = split_train_test(train_test)
@@ -69,11 +69,12 @@ def encode_cat_vars(
     """
     df = df.copy()
 
+    df = pd.get_dummies(df, columns=["homeplanet", "destination", "deck"])
+
     le = preprocessing.LabelEncoder()
     feat_cols = [c for c in df.columns if c not in non_feat_cols]
 
     for feat in feat_cols + [y_col]:
-        # if column is string or bool
         if df[feat].dtype == object:
             le = le.fit(df[feat])
             df[feat] = le.transform(df[feat])
@@ -130,6 +131,8 @@ def dispatch_imputer(imputer: str) -> Callable:
     match imputer:
         case "knn":
             return KNNImputer(n_neighbors=2, weights="uniform")
+        case "const_0":
+            return SimpleImputer(strategy="constant", fill_value=0)
         case _:
             raise ValueError("imputer must be 'knn' currently")
 

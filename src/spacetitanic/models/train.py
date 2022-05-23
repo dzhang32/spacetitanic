@@ -95,8 +95,10 @@ def train_model(X_train: pd.DataFrame, y_train: pd.Series) -> Callable:
     Callable
         a model trained on the training dataset.
     """
-    clf = XGBClassifier(use_label_encoder=False, eval_metric="logloss")
-    clf.fit(X_train, y_train)
+    clf = XGBClassifier(
+        objective="binary:logistic", use_label_encoder=False, eval_metric="logloss"
+    )
+    clf.fit(X_train, y_train, verbose=True)
 
     return clf
 
