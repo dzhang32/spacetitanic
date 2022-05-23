@@ -26,12 +26,21 @@ def main(repo_path: Path, non_feat_cols: List[str], y_col: str) -> None:
     print("Loading train data...")
     train = pd.read_csv(repo_path / "data/processed/train_engineered.csv")
 
-    print("Training model...")
+    print("Training model for validation...")
     X_train, X_val, y_train, y_val = split_train_val(train, non_feat_cols, y_col)
-    clf = train_model(X_train, y_train)
+    clf_val = train_model(X_train, y_train)
+
+    # train a separate model for the test dataset that all of the train data
+    # instead of train minus val (25%)
+    print("Training model for test...")
+    clf_test = train_model(
+        X_train=train.drop(columns=["passengerid", "transported"]),
+        y_train=train["transported"],
+    )
 
     print("Saving model...")
-    dump(clf, repo_path / "model/model.joblib")
+    dump(clf_val, repo_path / "model/model_val.joblib")
+    dump(clf_test, repo_path / "model/model_test.joblib")
 
     print("Saving validation data...")
     X_val[y_col] = y_val

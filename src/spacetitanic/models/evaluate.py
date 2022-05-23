@@ -25,18 +25,19 @@ def main(repo_path: Path, non_feat_cols: List[str], y_col: str) -> None:
     print("Loading test/val data and trained model...")
     test = pd.read_csv(repo_path / "data/processed/test_engineered.csv")
     val = pd.read_csv(repo_path / "data/processed/val_engineered.csv")
-    clf = load(repo_path / "model/model.joblib")
+    clf_val = load(repo_path / "model/model_val.joblib")
+    clf_test = load(repo_path / "model/model_test.joblib")
     feat_cols = [c for c in test.columns if c not in non_feat_cols]
 
     print("Generating predictions and metrics for val...")
-    y_val_pred = clf.predict(val.loc[:, feat_cols])
+    y_val_pred = clf_val.predict(val.loc[:, feat_cols])
 
     val_metrics = get_metrics(val, y_col, y_val_pred)
     val_metrics_path = repo_path / "metrics/metrics.json"
     val_metrics_path.write_text(json.dumps(val_metrics))
 
     print("Generating predictions and submission for test...")
-    y_test_pred = clf.predict(test.loc[:, feat_cols])
+    y_test_pred = clf_test.predict(test.loc[:, feat_cols])
     submission = get_submission_df(test, y_test_pred)
     submission.to_csv(repo_path / "data/output/submission.csv", index=False)
 
