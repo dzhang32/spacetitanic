@@ -2,7 +2,6 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-from calendar import c
 from pathlib import Path
 from typing import Callable, List, Tuple
 

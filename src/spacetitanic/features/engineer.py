@@ -1,9 +1,15 @@
+import warnings
+
+warnings.filterwarnings("ignore")
+
 from pathlib import Path
 from typing import Callable, List, Tuple
 
 import pandas as pd
-from sklearn import preprocessing
+from sklearn import metrics, preprocessing
 from sklearn.impute import KNNImputer, SimpleImputer
+from sklearn.model_selection import train_test_split
+from xgboost import XGBClassifier
 
 
 def main(repo_path: Path, non_feat_cols: List[str], y_col: str) -> None:
@@ -31,6 +37,9 @@ def main(repo_path: Path, non_feat_cols: List[str], y_col: str) -> None:
 
     print("Imputing missing values...")
     train_test = impute_missing(train_test, non_feat_cols, imputer="knn")
+
+    print("Performing feature selection...")
+    train_test = select_features(train_test, non_feat_cols, y_col)
 
     print("Split train/test data back into separate dfs...")
     train, test = split_train_test(train_test)
@@ -135,6 +144,121 @@ def dispatch_imputer(imputer: str) -> Callable:
             return SimpleImputer(strategy="constant", fill_value=0)
         case _:
             raise ValueError("imputer must be 'knn' currently")
+
+
+def select_features(
+    train_test: pd.DataFrame, non_feat_cols: List[str], y_col: str
+) -> pd.DataFrame:
+    """Perform feature selection.
+
+    Parameters
+    ----------
+    train_test : pd.DataFrame
+        merged dataset containing both train/test data. Can be generated using
+        spacetitanic.features.preprocess.merge_train_test().
+    non_feat_cols : List[str]
+        the column names of the variables that are NOT features.
+    y_col : str
+        the column names of the variable to be predicted.
+
+    Returns
+    -------
+    pd.DataFrame
+        train_test data with features selected/removed.
+    """
+    # set up train and validation datasets
+    train = train_test[train_test["dataset"] == "train"].copy()
+    train.reset_index(drop=True, inplace=True)
+    X = train.drop(columns=non_feat_cols)
+    y = train[y_col]
+    X_train, X_val, y_train, y_val = train_test_split(
+        X, y, test_size=0.33, random_state=32
+    )
+
+    # fit an xgb classifier to obtain feature importances and baseline accuracy
+    clf = XGBClassifier(
+        objective="binary:logistic",
+        use_label_encoder=False,
+        eval_metric="logloss",
+        random_state=32,
+    )
+    clf.fit(
+        X_train,
+        y_train,
+        early_stopping_rounds=10,
+        eval_set=[(X_val, y_val)],
+        verbose=0,
+    )
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_val)
+    initial_accuracy = metrics.accuracy_score(y_val, y_pred)
+    feat_imp = get_feat_imp(clf)
+
+    # iteratively remove features, then fit a xgb classifer and store it's accuracy
+    select_accuracy = {
+        "n_feat": [0],
+        "feat_dropped": [[]],
+        "accuracy": [initial_accuracy],
+    }
+
+    for i in range(0, 20):
+        feat_to_drop = list(feat_imp.loc[:i, "feat"])
+        X_train_select = X_train.drop(columns=feat_to_drop)
+        X_val_select = X_val.drop(columns=feat_to_drop)
+        clf_select = XGBClassifier(
+            objective="binary:logistic",
+            use_label_encoder=False,
+            eval_metric="logloss",
+            random_state=32,
+        )
+        clf_select.fit(
+            X_train_select,
+            y_train,
+            early_stopping_rounds=10,
+            eval_set=[(X_val_select, y_val)],
+            verbose=0,
+        )
+        y_val_pred = clf_select.predict(X_val_select)
+        accuracy = metrics.accuracy_score(y_val, y_val_pred)
+
+        select_accuracy["n_feat"].append(X_train_select.shape[1])
+        select_accuracy["feat_dropped"].append(feat_to_drop)
+        select_accuracy["accuracy"].append(accuracy)
+
+    select_accuracy = pd.DataFrame(select_accuracy)
+    print(select_accuracy)
+
+    # select the N features that obtain the highest accuracy
+    # then drop any features from the train_test data
+    feat_to_drop = select_accuracy.iloc[
+        select_accuracy["accuracy"].idxmax(),
+    ]
+    feat_to_drop = feat_to_drop["feat_dropped"]
+    if len(feat_to_drop) != 0:
+        train_test = train_test.drop(columns=feat_to_drop)
+
+    return train_test
+
+
+def get_feat_imp(clf: Callable) -> pd.DataFrame:
+    """Obtain feature importances from an XGboost classifier.
+
+    Parameters
+    ----------
+    clf : Callable
+        A trained XGboost classifier.
+
+    Returns
+    -------
+    pd.DataFrame
+        contains the feature names and their corresponding importances.
+    """
+    feat_imp = clf.get_booster().get_score(importance_type="weight")
+    feat_imp = pd.DataFrame({"feat": feat_imp.keys(), "imp": feat_imp.values()})
+    feat_imp.sort_values("imp", inplace=True)
+    feat_imp.reset_index(drop=True, inplace=True)
+
+    return feat_imp
 
 
 def split_train_test(train_test: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
