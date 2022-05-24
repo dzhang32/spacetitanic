@@ -1,3 +1,7 @@
+import warnings
+
+warnings.filterwarnings("ignore")
+
 from calendar import c
 from pathlib import Path
 from typing import Callable, List, Tuple
@@ -23,12 +27,12 @@ def main(repo_path: Path, non_feat_cols: List[str], y_col: str) -> None:
     """
     print("Training model\n--------------------------------")
 
-    print("Loading train data...")
+    print("Loading train/test data...")
     train = pd.read_csv(repo_path / "data/processed/train_engineered.csv")
 
     print("Training model for validation...")
     X_train, X_val, y_train, y_val = split_train_val(train, non_feat_cols, y_col)
-    clf_val = train_model(X_train, y_train)
+    clf_val = train_model(X_train, y_train, X_val, y_val)
 
     # train a separate model for the test dataset that all of the train data
     # instead of train minus val (25%)
@@ -36,6 +40,8 @@ def main(repo_path: Path, non_feat_cols: List[str], y_col: str) -> None:
     clf_test = train_model(
         X_train=train.drop(columns=["passengerid", "transported"]),
         y_train=train["transported"],
+        X_val=X_val,
+        y_val=y_val,
     )
 
     print("Saving model...")
@@ -80,7 +86,9 @@ def split_train_val(
     return X_train, X_val, y_train, y_val
 
 
-def train_model(X_train: pd.DataFrame, y_train: pd.Series) -> Callable:
+def train_model(
+    X_train: pd.DataFrame, y_train: pd.Series, X_val: pd.DataFrame, y_val: pd.Series
+) -> Callable:
     """Train a XGboost classifier.
 
     Parameters
@@ -96,9 +104,18 @@ def train_model(X_train: pd.DataFrame, y_train: pd.Series) -> Callable:
         a model trained on the training dataset.
     """
     clf = XGBClassifier(
-        objective="binary:logistic", use_label_encoder=False, eval_metric="logloss"
+        objective="binary:logistic",
+        use_label_encoder=False,
+        eval_metric="logloss",
+        random_state=32,
     )
-    clf.fit(X_train, y_train, verbose=True)
+    clf.fit(
+        X_train,
+        y_train,
+        verbose=True,
+        early_stopping_rounds=10,
+        eval_set=[(X_val, y_val)],
+    )
 
     return clf
 

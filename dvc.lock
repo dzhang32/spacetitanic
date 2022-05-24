@@ -37,18 +37,18 @@ stages:
       md5: c339b4ee343c79b8bcfe14c569cddf5a
       size: 1008421
     - path: src/spacetitanic/models/train.py
-      md5: af7e8001723b62ec2b5302ac3e05b60b
-      size: 3214
+      md5: 4f11aa8b0f8c011d7721cfecccf91e5c
+      size: 3514
     outs:
     - path: data/processed/val_engineered.csv
       md5: 9386c00f4d8aeffc91299e4850809341
       size: 235120
     - path: model/model_test.joblib
-      md5: eeebb0f5e0fdc0b1f6ed3320b5127624
-      size: 410362
+      md5: 2c2fb8d0209f894237a35f8352b6933a
+      size: 411393
     - path: model/model_val.joblib
-      md5: 283bfc6e2fb4f745a3537da4e3ebe06c
-      size: 376928
+      md5: 30a792022e80f201765b6cfda93e81d2
+      size: 160217
   evaluate:
     cmd: python3 src/spacetitanic/models/evaluate.py
     deps:
@@ -59,18 +59,18 @@ stages:
       md5: 9386c00f4d8aeffc91299e4850809341
       size: 235120
     - path: model/model_test.joblib
-      md5: eeebb0f5e0fdc0b1f6ed3320b5127624
-      size: 410362
+      md5: 2c2fb8d0209f894237a35f8352b6933a
+      size: 411393
     - path: model/model_val.joblib
-      md5: 283bfc6e2fb4f745a3537da4e3ebe06c
-      size: 376928
+      md5: 30a792022e80f201765b6cfda93e81d2
+      size: 160217
     - path: src/spacetitanic/models/evaluate.py
-      md5: a16e220e29987dd9b51d3701bc3a97a5
-      size: 3212
+      md5: fe36310728315a193a2e91640b6852f0
+      size: 3264
     outs:
     - path: data/output/submission.csv
       md5: 2aced3c19a84aad4a9b30034b4cd746b
       size: 57784
     - path: metrics/metrics.json
-      md5: 1194f8a06ad9e654871cf9df14cd36ce
+      md5: 99ab079e7aa350052344cc8f23faba11
       size: 127
