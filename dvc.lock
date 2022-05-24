@@ -21,8 +21,8 @@ stages:
       md5: f71e65a05755ec4d2cb037e4bd69b98e
       size: 1107023
     - path: src/spacetitanic/features/engineer.py
-      md5: 45b3856c1294aead851fea2b0c7ac06b
-      size: 8726
+      md5: 3997a567aaaea3d0e4c7a730d41c3817
+      size: 8707
     outs:
     - path: data/processed/test_engineered.csv
       md5: 0d656a0a479507988da1eaa9a1a02976
@@ -37,18 +37,18 @@ stages:
       md5: f46b495e19ce7630e2106e9227e39e94
       size: 938863
     - path: src/spacetitanic/models/train.py
-      md5: e6dc0bf19cf66f5d3fb126388a3f6f6d
-      size: 3491
+      md5: 930cb977ba156b18bff235149bd33878
+      size: 3741
     outs:
     - path: data/processed/val_engineered.csv
-      md5: 085a9cc94846236a7f1fa61ce3c66c33
-      size: 217714
+      md5: 99d3f14640bbdfc1e9c4f6aefe94626f
+      size: 287256
     - path: model/model_test.joblib
-      md5: cc5d063349dd5346644c2ea149d0f3a3
-      size: 409791
+      md5: 247fa8858c976bbf243da0d20f8f15e0
+      size: 3245147
     - path: model/model_val.joblib
-      md5: 155f6053da2fad1bffc1a822e0578995
-      size: 164673
+      md5: 2983523929494e7749d3ac974b87edd1
+      size: 2818820
   evaluate:
     cmd: python3 src/spacetitanic/models/evaluate.py
     deps:
@@ -56,21 +56,21 @@ stages:
       md5: 0d656a0a479507988da1eaa9a1a02976
       size: 453477
     - path: data/processed/val_engineered.csv
-      md5: 085a9cc94846236a7f1fa61ce3c66c33
-      size: 217714
+      md5: 99d3f14640bbdfc1e9c4f6aefe94626f
+      size: 287256
     - path: model/model_test.joblib
-      md5: cc5d063349dd5346644c2ea149d0f3a3
-      size: 409791
+      md5: 247fa8858c976bbf243da0d20f8f15e0
+      size: 3245147
     - path: model/model_val.joblib
-      md5: 155f6053da2fad1bffc1a822e0578995
-      size: 164673
+      md5: 2983523929494e7749d3ac974b87edd1
+      size: 2818820
     - path: src/spacetitanic/models/evaluate.py
       md5: fe36310728315a193a2e91640b6852f0
       size: 3264
     outs:
     - path: data/output/submission.csv
-      md5: f8f3aad9c27e0b77648618c67defba20
-      size: 57777
+      md5: 72044b2cf2a904ec77c46858805fc443
+      size: 57718
     - path: metrics/metrics.json
-      md5: b5366d7a264ee1f10dfbe41d7ccae074
+      md5: 985113f9372777ef927d17c4bc4dbe82
       size: 127

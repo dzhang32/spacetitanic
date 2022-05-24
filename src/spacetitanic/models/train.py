@@ -36,6 +36,7 @@ def main(repo_path: Path, non_feat_cols: List[str], y_col: str) -> None:
     # train a separate model for the test dataset that all of the train data
     # instead of train minus val (25%)
     print("Training model for test...")
+
     clf_test = train_model(
         X_train=train.drop(columns=["passengerid", "transported"]),
         y_train=train["transported"],
@@ -79,7 +80,7 @@ def split_train_val(
     y = train.loc[:, y_col]
 
     X_train, X_val, y_train, y_val = train_test_split(
-        X, y, test_size=0.25, random_state=32
+        X, y, test_size=0.33, random_state=32
     )
 
     return X_train, X_val, y_train, y_val
@@ -103,11 +104,22 @@ def train_model(
         a model trained on the training dataset.
     """
     clf = XGBClassifier(
+        learning_rate=0.01,
+        n_estimators=1000,
+        max_depth=5,
+        min_child_weight=1,
+        gamma=0.1,
+        subsample=0.8,
+        colsample_bytree=0.8,
+        reg_lambda=0.01,
         objective="binary:logistic",
         use_label_encoder=False,
         eval_metric="logloss",
         random_state=32,
+        scale_pos_weight=1,
+        verbose=0,
     )
+
     clf.fit(
         X_train,
         y_train,
