@@ -57,4 +57,4 @@ The following steps were taken sequentially to develop the machine learning pipe
 | 10 | [Feature selection](https://github.com/dzhang32/spacetitanic/releases/tag/xgb-mvp_feat_selection) | 0.802 |
 | 11 | [Tune the xgb hyperparameters](https://github.com/dzhang32/spacetitanic/releases/tag/xgb-tuned) | 0.808 |
 
-*This step is likely Kaggle-specific, as the labels for the test data are hidden in competitons.
+*This step is likely Kaggle-specific, as the labels for the test data are hidden in competitions.
